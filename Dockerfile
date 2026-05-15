@@ -14,7 +14,7 @@ FROM base AS runner
 ENV NODE_ENV=production
 WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install --prod --frozen-lockfile=false
+RUN pnpm install --frozen-lockfile=false
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/drizzle ./drizzle
 COPY --from=build /app/scripts ./scripts
