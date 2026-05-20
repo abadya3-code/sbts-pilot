@@ -1,7 +1,3 @@
-/*
-Design Philosophy: Industrial Command Center Minimalism.
-Sprint 2.1 makes Add Blind a clean modal action and keeps the registry focused on searching, filtering, and opening details.
-*/
 import { useMemo, useState, type FormEvent } from "react";
 import { ClipboardList, Eye, Plus, QrCode, Search, X } from "lucide-react";
 import { useLocation } from "wouter";
@@ -81,7 +77,7 @@ export default function Blinds() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Sprint 2.1 / Registry"
+        eyebrow="Blind Registry"
         title="Blinds Registry"
         description="Search, filter, and open Blind Details. New blind creation is now behind an action button for cleaner layout."
         actions={<button onClick={() => setOpen(true)} className="inline-flex items-center gap-2 rounded-2xl bg-cyan-600 px-4 py-2.5 text-sm font-extrabold text-white shadow-lg"><Plus className="h-4 w-4" /> Add Blind</button>}

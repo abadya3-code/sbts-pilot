@@ -55,7 +55,7 @@ export default function ProjectCertificates() {
       <PrintStyles />
       <div className="no-print">
         <PageHeader
-          eyebrow="Sprint 14 / PDF-ready Certificate Package"
+          eyebrow="PDF-ready Certificate Package"
           title={`${project.projectNo} · Certificate Register & Print Package`}
           description="Certificates can now be saved as system records, revised, and printed as a project package."
           actions={

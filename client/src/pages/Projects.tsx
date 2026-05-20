@@ -1,7 +1,3 @@
-/*
-Sprint 2.3 — Projects Management Fix.
-Projects are opened from Areas with filtering, project status is derived automatically from project progress, and management actions are separated into focused modals.
-*/
 import { useMemo, useState, type FormEvent } from "react";
 import { ArrowRight, Edit3, FolderKanban, FolderPlus, MapPin, Plus, Search, Trash2, X } from "lucide-react";
 import { useLocation } from "wouter";
@@ -113,7 +109,7 @@ export default function Projects() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Sprint 2.4 / Project Control"
+        eyebrow="Project Control"
         title={selectedArea ? `Projects · ${selectedArea.code}` : "Projects"}
         description={selectedArea ? `Showing projects inside ${selectedArea.name}. Project status is auto-calculated from blind progress.` : "Create and manage project workspaces. Status is no longer entered manually; it follows actual progress from the blinds inside each project."}
         actions={<button onClick={openCreate} className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-extrabold text-white shadow-lg"><Plus className="h-4 w-4" /> Add Project</button>}

@@ -113,7 +113,7 @@ const roleKeySchema = z.enum([
   "tiEngineer",
   "metalForeman",
 ]);
-const employeeStatusSchema = z.enum(["Active", "Standby", "Unavailable"]);
+const employeeStatusSchema = z.enum(["Pending", "Active", "Standby", "Unavailable", "Rejected", "Disabled"]);
 const passwordSchema = z.string().min(10).max(160).regex(/[A-Z]/, "Password must include an uppercase letter").regex(/[a-z]/, "Password must include a lowercase letter").regex(/[0-9]/, "Password must include a number");
 const usernameSchema = z.string().min(3).max(120).regex(/^[a-zA-Z0-9._-]+$/, "Use letters, numbers, dot, underscore, or dash only");
 const areaStatusSchema = z.enum(["Active", "Standby", "Closed"]);
@@ -187,6 +187,10 @@ const systemSettingsSchema = z.object({
     timeFormat: z.enum(["24H", "12H"]),
     logoText: z.string().min(2).max(160),
     logoUrl: z.string().max(500000).optional().nullable(),
+    appVersionNumber: z.string().max(40).optional().nullable(),
+    releaseName: z.string().max(120).optional().nullable(),
+    releaseYear: z.string().max(20).optional().nullable(),
+    appIconDataUrl: z.string().max(500000).optional().nullable(),
     companyName: z.string().max(180).optional().nullable(),
     companyShortName: z.string().max(80).optional().nullable(),
     companySubtitle: z.string().max(220).optional().nullable(),

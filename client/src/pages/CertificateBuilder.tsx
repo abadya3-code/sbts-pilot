@@ -8,6 +8,21 @@ import { toast } from "sonner";
 import { getCorporateIdentity, initialsFromCompanyName } from "@/lib/corporateIdentity";
 import { buildPrintFileName, printWithMode } from "@/lib/printExport";
 
+
+function formatDateTime(value?: string | Date | null) {
+  if (!value) return "N/A";
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "N/A";
+  return date.toLocaleString();
+}
+
+function formatDate(value?: string | Date | null) {
+  if (!value) return formatDate();
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return formatDate();
+  return date.toLocaleDateString();
+}
+
 function phaseName(key?: string | null) {
   const map: Record<string, string> = {
     broken: "Broken / Preparation",
@@ -72,7 +87,7 @@ export default function CertificateBuilder() {
       <PrintStyles />
       <div className="no-print">
         <PageHeader
-          eyebrow="Sprint 5 / Certificate Builder"
+          eyebrow="Certificate Builder"
           title={`${certNo} · ${blind.tagNo}`}
           description="Certificate preview is generated from blind details, workflow logs, torque records, approvals, and the blind QR code."
           actions={
@@ -115,7 +130,7 @@ export default function CertificateBuilder() {
             <div><div className="text-sm font-black text-slate-950">{corporate.showOnCertificates ? corporate.companyName : (generalSettings?.logoText ?? "Smart Blind Tag System")}</div><div className="text-xs font-bold text-slate-500">{corporate.showOnCertificates ? corporate.companySubtitle : (generalSettings?.facilityName ?? "Facility")}</div></div>
           </div>
           <div className="text-center"><h1 className="text-xl font-black text-slate-950">{certSettings?.certificateTitle ?? "Smart Blind Tag System Certificate"}</h1><div className="mt-2 inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700 ring-1 ring-emerald-100">APPROVED PACKAGE</div><div className="mt-1 text-[10px] font-bold text-slate-500">{certNo}</div></div>
-          <div className="text-right"><div className="inline-flex rounded-2xl border border-red-100 bg-red-50 px-3 py-1 text-xs font-black text-red-700">{blind.status}</div><div className="mt-2 text-sm font-black text-slate-950">{blind.projectName}</div><div className="text-xs font-bold text-slate-500">Generated: {latestCertificate?.issuedAt ? new Date(latestCertificate.issuedAt).toLocaleDateString() : new Date().toLocaleDateString()}</div></div>
+          <div className="text-right"><div className="inline-flex rounded-2xl border border-red-100 bg-red-50 px-3 py-1 text-xs font-black text-red-700">{blind.status}</div><div className="mt-2 text-sm font-black text-slate-950">{blind.projectName}</div><div className="text-xs font-bold text-slate-500">Generated: {latestCertificate?.issuedAt ? formatDate(latestCertificate.issuedAt) : formatDate()}</div></div>
         </header>
 
         <section className="mt-4 grid gap-2 md:grid-cols-2">
@@ -145,7 +160,7 @@ export default function CertificateBuilder() {
                 <div key={String(record.id)} className="rounded-2xl bg-amber-50 p-3 text-sm font-bold text-slate-700">
                   <div className="font-black text-slate-950">{record.machineType} · {record.psiValue} PSI</div>
                   <div className="mt-1">Technician: {record.technicianName ?? "N/A"} {record.technicianBadge ? `(${record.technicianBadge})` : ""}</div>
-                  <div className="mt-1 text-xs text-slate-500">{new Date(record.createdAt).toLocaleString()} · {record.remarks ?? "No remarks"}</div>
+                  <div className="mt-1 text-xs text-slate-500">{formatDateTime(record.createdAt)} · {record.remarks ?? "No remarks"}</div>
                 </div>
               )) : <div className="rounded-2xl border border-dashed border-slate-200 p-4 text-sm font-bold text-slate-500">No torque records captured yet.</div>}
             </div>
@@ -180,7 +195,7 @@ export default function CertificateBuilder() {
                   <div className="font-black text-slate-950">{log.action} · {phaseName(log.toPhaseKey)}</div>
                   <div className="mt-1 font-semibold text-slate-500">{log.remarks ?? "No remarks"}</div>
                 </div>
-                <div className="text-xs font-bold text-slate-500 md:text-right">{new Date(log.createdAt).toLocaleString()}</div>
+                <div className="text-xs font-bold text-slate-500 md:text-right">{formatDateTime(log.createdAt)}</div>
               </div>
             ))}
           </div>

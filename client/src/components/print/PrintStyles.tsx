@@ -60,6 +60,10 @@ export function PrintStyles() {
           page: sbtsTagPage;
           width: 11cm !important;
           height: 7cm !important;
+          min-width: 11cm !important;
+          min-height: 7cm !important;
+          max-width: 11cm !important;
+          max-height: 7cm !important;
           margin: 0 auto !important;
           break-after: page;
           page-break-after: always;
@@ -68,6 +72,7 @@ export function PrintStyles() {
           box-shadow: none !important;
           border-radius: 0.35cm !important;
           overflow: hidden !important;
+          transform: none !important;
         }
 
         .tag-card:last-child {
@@ -82,15 +87,16 @@ export function PrintStyles() {
         .certificate-page {
           page: sbtsCertificatePage;
           width: 19cm !important;
-          min-height: 27.2cm !important;
-          max-height: 27.2cm !important;
+          min-height: 27cm !important;
+          max-height: 27cm !important;
           margin: 0 auto !important;
-          padding: 0.55cm !important;
+          padding: 0.5cm !important;
           box-shadow: none !important;
           border: 2px solid #0f172a !important;
-          border-radius: 0.35cm !important;
+          border-radius: 0.28cm !important;
           overflow: hidden !important;
           background: white !important;
+          font-size: 82% !important;
         }
 
         .report-print-page {
@@ -98,7 +104,7 @@ export function PrintStyles() {
           width: 19cm !important;
           min-height: 27cm !important;
           margin: 0 auto !important;
-          padding: 0.65cm !important;
+          padding: 0.55cm !important;
           background: white !important;
           box-shadow: none !important;
           border: none !important;
@@ -133,6 +139,17 @@ export function PrintStyles() {
         .print-avoid-break {
           break-inside: avoid;
           page-break-inside: avoid;
+        }
+
+        body[data-sbts-print-mode="certificate"] .certificate-page table,
+        body[data-sbts-print-mode="certificate-package"] .certificate-page table,
+        body[data-sbts-print-mode="report"] table {
+          font-size: 10px !important;
+        }
+
+        body[data-sbts-print-mode="tag"] .tag-card,
+        body[data-sbts-print-mode="tag-register"] .tag-card {
+          display: block !important;
         }
       }
 

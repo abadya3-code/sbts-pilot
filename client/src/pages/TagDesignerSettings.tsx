@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { ArrowLeft, Eye, Palette, RotateCcw, Save, Tags } from "lucide-react";
+import { ArrowLeft, Eye, Grip, Palette, RotateCcw, Save, Tags } from "lucide-react";
 import { useLocation, useRoute } from "wouter";
 import { PageHeader } from "@/components/common/PageHeader";
 import { QRCodeBlock, buildBlindQrValue } from "@/components/common/QRCodeBlock";
@@ -57,6 +57,8 @@ export default function TagDesignerSettings() {
   const project = projectsQuery.data?.find(item => item.id === projectId);
   const sampleBlind = (blindsQuery.data ?? []).find(item => item.projectId === projectId);
   const [form, setForm] = useState<TagSettingsForm>({ ...fallbackSettings, projectId });
+  const [selectedLayer, setSelectedLayer] = useState<"title" | "qr" | "logo" | "hole" | "data">("qr");
+  const [layout, setLayout] = useState({ title: { x: 18, y: 18 }, logo: { x: 76, y: 10 }, hole: { x: 50, y: 9 }, qr: { x: 50, y: 50 }, data: { x: 50, y: 82 } });
 
   useEffect(() => {
     if (!settingsQuery.data) return;
@@ -121,7 +123,7 @@ export default function TagDesignerSettings() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Sprint 6 / Tag Designer Settings"
+        eyebrow="Tag Designer Pro"
         title={`${project.projectNo} · Tag Designer`}
         description="Project-level template for QR hanging tags. Settings are persisted and used by single and batch tag printing."
         actions={
@@ -177,38 +179,44 @@ export default function TagDesignerSettings() {
         </form>
 
         <section className="sbts-card p-6">
-          <div className="mb-4 flex items-center gap-2 text-sm font-black text-slate-950"><Eye className="h-4 w-4 text-cyan-700" /> Live Preview</div>
-          <div className="flex justify-center overflow-auto rounded-3xl bg-slate-100 p-5">
-            <article
-              className="relative overflow-hidden rounded-[0.45cm] border-2 border-slate-900 p-4 shadow-lg"
-              style={{ width: `${form.tagWidthCm}cm`, height: `${form.tagHeightCm}cm`, background: form.tagColor, color: form.textColor, fontSize: `${form.fontScale}%` }}
-            >
-              {form.showHole && <div className="absolute left-1/2 top-2 h-5 w-5 -translate-x-1/2 rounded-full border-2 bg-white" style={{ borderColor: form.textColor }} />}
-              <div className="flex h-full gap-4 pt-5">
-                <div className="flex min-w-0 flex-1 flex-col justify-between">
-                  <div>
-                    {form.showLogo && <div className="text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: form.accentColor }}>{form.logoText}</div>}
-                    <div className="mt-1 text-3xl font-black tracking-tight">{previewBlind.tagNo}</div>
-                    <div className="mt-1 text-sm font-black opacity-70">{previewBlind.blindNo} · {previewBlind.blindType}</div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs font-black">
-                    <div className="rounded-xl bg-white/70 p-2"><span className="block text-[9px] uppercase tracking-wider opacity-60">Area</span>{previewBlind.areaCode}</div>
-                    <div className="rounded-xl bg-white/70 p-2"><span className="block text-[9px] uppercase tracking-wider opacity-60">Line</span>{previewBlind.lineNo}</div>
-                    <div className="rounded-xl bg-white/70 p-2"><span className="block text-[9px] uppercase tracking-wider opacity-60">Size</span>{previewBlind.size}</div>
-                    <div className="rounded-xl bg-white/70 p-2"><span className="block text-[9px] uppercase tracking-wider opacity-60">Rating</span>{previewBlind.rating ?? "N/A"}</div>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {form.showStatus && <span className="rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wider text-white" style={{ background: form.accentColor }}>{previewBlind.status}</span>}
-                    {form.showProjectNo && <span className="text-[10px] font-black uppercase tracking-wider opacity-60">{previewBlind.projectNo}</span>}
-                    {form.showLocationNote && <span className="text-[10px] font-black uppercase tracking-wider opacity-60">{previewBlind.locationNote}</span>}
-                  </div>
-                </div>
-                <div className="flex w-[4.1cm] flex-col items-center justify-between rounded-2xl border border-slate-200 bg-white/80 p-2">
-                  <QRCodeBlock value={buildBlindQrValue(previewBlind.id, previewBlind.tagNo)} label={previewBlind.tagNo} size={Math.min(form.qrSizePx, 150)} />
-                  <div className="text-center text-[9px] font-black uppercase tracking-wider opacity-60">Scan for live status</div>
-                </div>
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2 text-sm font-black text-slate-950"><Eye className="h-4 w-4 text-cyan-700" /> Live Tag Layout Editor</div>
+            <div className="text-xs font-bold text-slate-500">Use the layer controls to position the tag elements before print/PDF export.</div>
+          </div>
+          <div className="grid gap-4 lg:grid-cols-[1fr_270px]">
+            <div className="flex justify-center overflow-auto rounded-3xl bg-slate-100 p-5">
+              <article
+                className="relative overflow-hidden rounded-[0.45cm] border-2 border-slate-900 shadow-lg"
+                style={{ width: `${form.tagWidthCm}cm`, height: `${form.tagHeightCm}cm`, background: form.tagColor, color: form.textColor, fontSize: `${form.fontScale}%` }}
+              >
+                {form.showHole && <button type="button" onClick={() => setSelectedLayer("hole")} className="absolute h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border-[6px] bg-white/80 shadow" style={{ left: `${layout.hole.x}%`, top: `${layout.hole.y}%`, borderColor: form.textColor }} aria-label="Select hanging hole" />}
+                {form.showLogo && <button type="button" onClick={() => setSelectedLayer("logo")} className="absolute flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-2xl bg-white/90 p-1 text-xs font-black shadow ring-2 ring-white" style={{ left: `${layout.logo.x}%`, top: `${layout.logo.y}%`, color: form.accentColor }}>LOGO</button>}
+                <button type="button" onClick={() => setSelectedLayer("title")} className="absolute -translate-x-1/2 -translate-y-1/2 rounded-2xl px-2 py-1 text-center text-2xl font-black tracking-tight ring-2 ring-transparent hover:ring-cyan-200" style={{ left: `${layout.title.x}%`, top: `${layout.title.y}%` }}>{form.logoText}</button>
+                <button type="button" onClick={() => setSelectedLayer("qr")} className="absolute -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-white p-2 shadow-xl ring-2 ring-white hover:ring-cyan-300" style={{ left: `${layout.qr.x}%`, top: `${layout.qr.y}%` }}>
+                  <QRCodeBlock value={buildBlindQrValue(previewBlind.id, previewBlind.tagNo)} label={previewBlind.tagNo} size={Math.min(form.qrSizePx, 210)} />
+                </button>
+                <button type="button" onClick={() => setSelectedLayer("data")} className="absolute -translate-x-1/2 -translate-y-1/2 rounded-2xl px-3 py-2 text-center font-black ring-2 ring-transparent hover:ring-cyan-200" style={{ left: `${layout.data.x}%`, top: `${layout.data.y}%` }}>
+                  <div>ID: {previewBlind.tagNo}</div>
+                  <div>Area: {previewBlind.areaCode}</div>
+                  <div>Line: {previewBlind.lineNo}</div>
+                  <div className="mt-1 text-xs opacity-70">{previewBlind.size} · {previewBlind.rating ?? "N/A"}</div>
+                </button>
+                {form.showProjectNo && <div className="absolute bottom-2 left-3 text-[10px] font-black uppercase tracking-wider opacity-70">{previewBlind.projectNo}</div>}
+              </article>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-white p-4">
+              <div className="mb-3 flex items-center gap-2 text-sm font-black text-slate-950"><Grip className="h-4 w-4 text-cyan-700" /> Layer Position</div>
+              <div className="grid gap-2">
+                {(["title", "logo", "hole", "qr", "data"] as const).map(layer => (
+                  <button key={layer} type="button" onClick={() => setSelectedLayer(layer)} className={`rounded-2xl px-3 py-2 text-left text-xs font-black uppercase tracking-wider ${selectedLayer === layer ? "bg-slate-950 text-white" : "bg-slate-50 text-slate-600 ring-1 ring-slate-200"}`}>{layer}</button>
+                ))}
               </div>
-            </article>
+              <div className="mt-4 space-y-4">
+                <label className="block text-xs font-black uppercase tracking-wider text-slate-500">X Position {layout[selectedLayer].x}%<input type="range" min="0" max="100" value={layout[selectedLayer].x} onChange={e => moveLayer(selectedLayer, "x", Number(e.target.value))} className="mt-2 w-full" /></label>
+                <label className="block text-xs font-black uppercase tracking-wider text-slate-500">Y Position {layout[selectedLayer].y}%<input type="range" min="0" max="100" value={layout[selectedLayer].y} onChange={e => moveLayer(selectedLayer, "y", Number(e.target.value))} className="mt-2 w-full" /></label>
+                <div className="rounded-2xl bg-cyan-50 p-3 text-xs font-bold leading-5 text-cyan-900">Layer controls prepare the professional editor behavior. Saved print settings continue to use existing project template fields; persisted per-layer coordinates can be added in a future schema migration when approved.</div>
+              </div>
+            </div>
           </div>
         </section>
       </div>

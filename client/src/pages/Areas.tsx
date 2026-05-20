@@ -1,7 +1,3 @@
-/*
-Design Philosophy: Industrial Command Center Minimalism.
-Sprint 2.4 keeps Areas clean: no owner/status fields in setup, clickable area cards open filtered projects, and admin actions are explicit.
-*/
 import { useMemo, useState, type FormEvent } from "react";
 import { ArrowRight, Building2, Edit3, MapPinned, Plus, Search, Trash2, X } from "lucide-react";
 import { useLocation } from "wouter";

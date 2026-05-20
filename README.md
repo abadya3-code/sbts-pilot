@@ -221,3 +221,23 @@ docs/deployment/ONLINE_DEPLOYMENT_GUIDE.md
 docs/deployment/MYSQL_DEPLOYMENT_CHECKLIST.md
 docs/deployment/RAILWAY_RENDER_DEPLOYMENT_NOTES.md
 ```
+
+
+## Sprint 17 Pilot Polish
+
+Sprint 17 improves the live pilot user experience and print/PDF readiness.
+
+Run:
+
+```powershell
+pnpm polish:static
+pnpm qa:polish
+```
+
+Key areas:
+- Pending user approval flow
+- Version and release control in Settings
+- Clean user-facing labels without Sprint wording
+- Tag Designer Pro layer controls
+- Professional tag/certificate/report print CSS
+- Safer certificate date formatting

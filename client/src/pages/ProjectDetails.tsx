@@ -1,7 +1,3 @@
-/*
-Sprint 2.7 — Smart Employee Picker for scalable Phase Task Assignment.
-Project actions are centralized in Project Setup; blind creation no longer asks for phase/status/owner.
-*/
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
   ArrowLeft,
@@ -1054,7 +1050,7 @@ export default function ProjectDetails() {
             </div>
             <div className="mt-5 rounded-2xl bg-amber-50 p-4 text-xs font-bold leading-5 text-amber-900">
               Professional rule: phase update is not a free action. The user
-              must enter a badge/signature ID belonging to one of the selected employee cards for the target phase. Sprint 3 active: assignments are saved to backend tables and validated by the phase gate API before any phase update.
+              must enter a badge/signature ID belonging to one of the selected employee cards for the target phase. Assignments are saved to backend tables and validated by the phase gate API before any phase update.
             </div>
             <div className="mt-6 flex justify-end gap-3">
               <button

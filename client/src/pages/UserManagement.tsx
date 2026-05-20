@@ -17,7 +17,7 @@ const roleOptions: { key: SecurityRoleKey; label: string }[] = [
   { key: "metalForeman", label: "Metal Foreman" },
 ];
 
-const statusOptions = ["Active", "Standby", "Unavailable"] as const;
+const statusOptions = ["Pending", "Active", "Standby", "Unavailable", "Rejected", "Disabled"] as const;
 type Status = (typeof statusOptions)[number];
 
 type FormState = {
@@ -40,7 +40,7 @@ const emptyForm: FormState = {
   specialty: "Field Execution",
   department: "Maintenance",
   shift: "Day",
-  status: "Active",
+  status: "Pending",
   photoUrl: "",
   isCertified: true,
 };
@@ -122,6 +122,7 @@ export default function UserManagement() {
   const stats = useMemo(() => ({
     total: users.length,
     active: users.filter(user => user.status === "Active").length,
+    pending: users.filter(user => user.status === "Pending").length,
     admins: users.filter(user => user.roleKey === "admin").length,
     certified: users.filter(user => user.isCertified).length,
   }), [users]);
@@ -189,7 +190,7 @@ export default function UserManagement() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Sprint 9 security"
+        eyebrow="User Access Administration"
         title="User Management"
         description="Manage employees, roles, certification status, and demo active session. Admin-only pages are hard locked from here and the navigation shell."
         actions={<button onClick={openCreate} className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-extrabold text-white shadow-lg hover:bg-slate-800"><Plus className="h-4 w-4" /> Add User</button>}
@@ -197,6 +198,7 @@ export default function UserManagement() {
 
       <div className="grid gap-4 md:grid-cols-4">
         <div className="sbts-card p-5"><div className="text-xs font-black uppercase tracking-widest text-slate-400">Total users</div><div className="mt-2 text-3xl font-black text-slate-950">{stats.total}</div></div>
+        <div className="sbts-card p-5"><div className="text-xs font-black uppercase tracking-widest text-slate-400">Pending Approval</div><div className="mt-2 text-3xl font-black text-amber-600">{stats.pending}</div></div>
         <div className="sbts-card p-5"><div className="text-xs font-black uppercase tracking-widest text-slate-400">Active</div><div className="mt-2 text-3xl font-black text-emerald-600">{stats.active}</div></div>
         <div className="sbts-card p-5"><div className="text-xs font-black uppercase tracking-widest text-slate-400">Admins</div><div className="mt-2 text-3xl font-black text-cyan-700">{stats.admins}</div></div>
         <div className="sbts-card p-5"><div className="text-xs font-black uppercase tracking-widest text-slate-400">Certified</div><div className="mt-2 text-3xl font-black text-slate-950">{stats.certified}</div></div>
@@ -239,10 +241,11 @@ export default function UserManagement() {
               </div>
               <div>
                 <div className="text-xs font-black uppercase tracking-widest text-slate-400">Status</div>
-                <span className={`mt-1 inline-flex rounded-full px-3 py-1 text-xs font-black ${user.status === "Active" ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100" : user.status === "Standby" ? "bg-amber-50 text-amber-700 ring-1 ring-amber-100" : "bg-rose-50 text-rose-700 ring-1 ring-rose-100"}`}>{user.status}</span>
+                <span className={`mt-1 inline-flex rounded-full px-3 py-1 text-xs font-black ${user.status === "Active" ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100" : user.status === "Pending" ? "bg-amber-50 text-amber-700 ring-1 ring-amber-100" : user.status === "Standby" ? "bg-sky-50 text-sky-700 ring-1 ring-sky-100" : "bg-rose-50 text-rose-700 ring-1 ring-rose-100"}`}>{user.status}</span>
               </div>
               <div className="flex flex-wrap justify-start gap-2 xl:justify-end">
                 <button onClick={() => switchSession(user)} className="inline-flex items-center gap-2 rounded-2xl border border-cyan-200 bg-cyan-50 px-3 py-2 text-xs font-black text-cyan-700 hover:bg-cyan-100"><ShieldCheck className="h-4 w-4" /> Use session</button>
+                {user.status === "Pending" && <button onClick={() => updateMutation.mutate({ ...user, status: "Active" as any })} className="inline-flex items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700 hover:bg-emerald-100"><CheckCircle2 className="h-4 w-4" /> Approve</button>}
                 <button onClick={() => openCredential(user)} className="inline-flex items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700 hover:bg-emerald-100"><KeyRound className="h-4 w-4" /> Credential</button>
                 <button onClick={() => openEdit(user)} className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-700 hover:border-cyan-200 hover:text-cyan-700"><Edit3 className="h-4 w-4" /> Edit</button>
                 <button onClick={() => deleteMutation.mutate({ id: user.id })} className="inline-flex items-center gap-2 rounded-2xl border border-rose-200 bg-white px-3 py-2 text-xs font-black text-rose-700 hover:bg-rose-50"><Trash2 className="h-4 w-4" /> Delete</button>

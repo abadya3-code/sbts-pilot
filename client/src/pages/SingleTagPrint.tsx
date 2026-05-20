@@ -55,7 +55,7 @@ export default function SingleTagPrint() {
       <PrintStyles />
       <div className="no-print">
         <PageHeader
-          eyebrow="Sprint 6 / Single QR Tag"
+          eyebrow="Single QR Tag"
           title={`${blind.tagNo} · Printable Tag`}
           description={`Global template: ${settings.templateName}. QR code is linked to this blind detail page.`}
           actions={

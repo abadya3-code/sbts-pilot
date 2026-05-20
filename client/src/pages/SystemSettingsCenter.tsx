@@ -17,6 +17,10 @@ type SettingsForm = {
     timeFormat: "24H" | "12H";
     logoText: string;
     logoUrl?: string | null;
+    appVersionNumber?: string | null;
+    releaseName?: string | null;
+    releaseYear?: string | null;
+    appIconDataUrl?: string | null;
     companyName?: string | null;
     companyShortName?: string | null;
     companySubtitle?: string | null;
@@ -93,6 +97,10 @@ const defaultSettings: SettingsForm = {
     timeFormat: "24H",
     logoText: "SBTS Professional",
     logoUrl: "",
+    appVersionNumber: "V1.0",
+    releaseName: "Pilot Live",
+    releaseYear: "2026",
+    appIconDataUrl: "",
     companyName: "Company Name",
     companyShortName: "Company",
     companySubtitle: "Shedgum Gas Plant / Maintenance Department",
@@ -242,7 +250,7 @@ export default function SystemSettingsCenter() {
     { label: "Company", value: form.general.companyShortName || form.general.companyName || "Company", note: form.general.companySubtitle || `${form.general.facilityName} / ${form.general.departmentName}` },
     { label: "Tag Template", value: `${form.tags.defaultTagWidthCm} × ${form.tags.defaultTagHeightCm} cm`, note: `${form.tags.defaultQrSizePx}px QR` },
     { label: "Certificate", value: form.certificates.requireFinalApprovalBeforeIssue ? "Final approval required" : "Draft issue allowed", note: form.certificates.certificateTitle },
-    { label: "Security", value: `${form.security.sessionTimeoutHours}h session`, note: form.security.allowVisitorQrView ? "QR visitor view on" : "QR login only" },
+    { label: "Release", value: `${form.general.appVersionNumber ?? "V1.0"}`, note: `${form.general.releaseName ?? "Pilot Live"} · ${form.general.releaseYear ?? "2026"}` },
   ], [form]);
 
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -262,7 +270,7 @@ export default function SystemSettingsCenter() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Sprint 10.1 / Admin Control Center"
+        eyebrow="Admin Control Center"
         title="System Settings Center"
         description="Global SBTS defaults for facility identity, QR tags, certificates, notifications, and security. Project-specific settings still remain inside Project Setup."
         actions={
@@ -360,6 +368,9 @@ export default function SystemSettingsCenter() {
                 <ToggleRow label="On Tags" description="Print logo/name on QR tags." checked={form.general.showCompanyOnTags !== false} onChange={v => setForm({ ...form, general: { ...form.general, showCompanyOnTags: v } })} />
                 <ToggleRow label="On Reports" description="Print logo/name on reports." checked={form.general.showCompanyOnReports !== false} onChange={v => setForm({ ...form, general: { ...form.general, showCompanyOnReports: v } })} />
               </div>
+              <Field label="Application Version"><input value={form.general.appVersionNumber ?? "V1.0"} onChange={e => setForm({ ...form, general: { ...form.general, appVersionNumber: e.target.value } })} placeholder="V1.0" className="w-full rounded-2xl border border-slate-200 px-4 py-3 font-bold text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100" /></Field>
+              <Field label="Release Name"><input value={form.general.releaseName ?? "Pilot Live"} onChange={e => setForm({ ...form, general: { ...form.general, releaseName: e.target.value } })} placeholder="Pilot Live" className="w-full rounded-2xl border border-slate-200 px-4 py-3 font-bold text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100" /></Field>
+              <Field label="Release Year"><input value={form.general.releaseYear ?? "2026"} onChange={e => setForm({ ...form, general: { ...form.general, releaseYear: e.target.value } })} placeholder="2026" className="w-full rounded-2xl border border-slate-200 px-4 py-3 font-bold text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100" /></Field>
               <Field label="Theme Template"><select value={form.general.themeTemplate ?? "Template 1"} onChange={e => setForm({ ...form, general: { ...form.general, themeTemplate: e.target.value as any } })} className="w-full rounded-2xl border border-slate-200 px-4 py-3 font-bold text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100">{THEME_OPTIONS.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select></Field>
               <Field label="System Accent Color"><input type="color" value={form.general.customAccentColor ?? "#0891b2"} onChange={e => setForm({ ...form, general: { ...form.general, customAccentColor: e.target.value } })} className="h-12 w-full rounded-2xl border border-slate-200 bg-white p-1" /></Field>
               <Field label="Header Description"><input value={form.general.appDescription ?? ""} onChange={e => setForm({ ...form, general: { ...form.general, appDescription: e.target.value } })} className="w-full rounded-2xl border border-slate-200 px-4 py-3 font-bold text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100" /></Field>

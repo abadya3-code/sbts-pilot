@@ -298,13 +298,17 @@ export async function createEmployeeWithCredential(input: {
   specialty: string;
   department: string;
   shift: string;
-  status: "Active" | "Standby" | "Unavailable";
+  status: "Pending" | "Active" | "Standby" | "Unavailable" | "Rejected" | "Disabled";
   photoUrl?: string | null;
   isCertified?: boolean;
   username: string;
   password: string;
   recoveryEmail?: string | null;
 }, actorOpenId?: string | null) {
+  const db = await requireDb();
+  const username = input.username.trim().toLowerCase();
+  const existing = await db.select().from(authPasswordCredentials).where(eq(authPasswordCredentials.username, username)).limit(1);
+  if (existing.length > 0) throw new Error("Username already exists.");
   const employee = await createEmployee({
     badge: input.badge,
     fullName: input.fullName,
@@ -316,14 +320,41 @@ export async function createEmployeeWithCredential(input: {
     photoUrl: input.photoUrl ?? null,
     isCertified: input.isCertified ?? false,
   });
-  const credential = await registerPasswordCredential({
+  const { salt, hash } = await hashPassword(input.password);
+  const credentialId = makeAuthId("cred");
+  await db.insert(authPasswordCredentials).values({
+    id: credentialId,
     employeeId: employee.id,
-    username: input.username,
-    password: input.password,
-    recoveryEmail: input.recoveryEmail ?? null,
-    mustChangePassword: false,
-  }, actorOpenId ?? "self-register");
-  return { employee, credential };
+    username,
+    recoveryEmail: input.recoveryEmail?.trim().toLowerCase() || null,
+    passwordHash: hash,
+    passwordSalt: salt,
+    passwordAlgorithm: "scrypt-sha256",
+    status: employee.status === "Active" ? "Active" : "Pending",
+    mustChangePassword: 0,
+    failedAttempts: 0,
+    createdByOpenId: actorOpenId ?? "self-register",
+  });
+  await createSystemNotification({
+    userOpenId: null,
+    type: "Action",
+    title: "New user approval required",
+    message: `${employee.fullName} registered and is waiting for admin approval.`,
+    relatedEntity: "User",
+    relatedId: employee.id,
+    actionUrl: "/users",
+    severity: "warning",
+  });
+  await recordSecurityEvent({
+    eventType: "user.pending_approval",
+    severity: "info",
+    actorOpenId: actorOpenId ?? "self-register",
+    employeeId: employee.id,
+    badge: employee.badge,
+    roleKey: employee.roleKey,
+    summary: `${employee.fullName} submitted a registration request. Credential remains Pending until admin approval.`,
+  });
+  return { employee, credential: { success: true as const, credentialId, username } };
 }
 
 export async function authenticatePasswordUser(input: PasswordLoginInput): Promise<PasswordAuthResult> {
@@ -1959,7 +1990,7 @@ export type EmployeeModel = {
   specialty: string;
   department: string;
   shift: string;
-  status: "Active" | "Standby" | "Unavailable";
+  status: "Pending" | "Active" | "Standby" | "Unavailable" | "Rejected" | "Disabled";
   photoUrl?: string | null;
   initials: string;
   isCertified: boolean;
@@ -2140,6 +2171,10 @@ export type SystemSettingsModel = {
     timeFormat: "24H" | "12H";
     logoText: string;
     logoUrl?: string | null;
+    appVersionNumber?: string | null;
+    releaseName?: string | null;
+    releaseYear?: string | null;
+    appIconDataUrl?: string | null;
     companyName?: string | null;
     companyShortName?: string | null;
     companySubtitle?: string | null;
@@ -2457,6 +2492,10 @@ const defaultSystemSettings: SystemSettingsModel = {
     timeFormat: "24H",
     logoText: "SBTS Professional",
     logoUrl: "",
+    appVersionNumber: "V1.0",
+    releaseName: "Pilot Live",
+    releaseYear: "2026",
+    appIconDataUrl: "",
     companyName: "Company Name",
     companyShortName: "Company",
     companySubtitle: "Shedgum Gas Plant / Maintenance Department",

@@ -51,7 +51,7 @@ export default function NotificationInbox() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Sprint 7 / Operational notification center"
+        eyebrow="Operational Notification Center"
         title="Notification Inbox"
         description="Central inbox for approvals, certificate events, tag printing, workflow updates, and system messages."
       />

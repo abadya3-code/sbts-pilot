@@ -125,7 +125,7 @@ export default function ReportsExportCenter() {
         <div className="grid gap-6 p-6 lg:grid-cols-[1.2fr_0.8fr] lg:p-8">
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-200/20 bg-cyan-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-cyan-100">
-              <BarChart3 className="h-4 w-4" /> Sprint 8 Export Center
+              <BarChart3 className="h-4 w-4" /> Reports Export Center
             </div>
             <h1 className="text-3xl font-black tracking-tight sm:text-4xl">Reports & Export Center</h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">

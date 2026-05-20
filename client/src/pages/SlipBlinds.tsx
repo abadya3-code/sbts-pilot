@@ -1,7 +1,3 @@
-/*
-Sprint 2.3 — Slip Blind Dashboard.
-Reference: SBTS_v1.0_patch47.48_actor_clickable_users_filter. The page follows the original idea: KPI summary, Areas level, Projects level, and Slip Blind table inside the selected project.
-*/
 import { useMemo, useState } from "react";
 import { ArrowLeft, ChevronRight, Eye, Layers3, MapPinned, QrCode, Search, X } from "lucide-react";
 import { useLocation } from "wouter";

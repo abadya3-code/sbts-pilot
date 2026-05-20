@@ -1,7 +1,3 @@
-/*
-Design Philosophy: Industrial Command Center Minimalism.
-Sprint 2.5 rebuilds Blind Details with authorized phase signatures linked to Project Phase Task Assignment.
-*/
 import { useMemo, useState, type FormEvent } from "react";
 import {
   ArrowLeft,
@@ -452,7 +448,7 @@ export default function BlindDetails() {
       />
 
       <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-cyan-100 bg-cyan-50 px-4 py-3 text-sm font-bold text-cyan-900">
-        <Database className="h-4 w-4" /> Sprint 4 backend gate active: phase updates create approval requests when needed and torque records are displayed below.
+        <Database className="h-4 w-4" /> Backend gate active: phase updates create approval requests when needed and torque records are displayed below.
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">

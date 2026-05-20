@@ -84,7 +84,7 @@ export default function TagPrint() {
       <PrintStyles />
       <div className="no-print">
         <PageHeader
-          eyebrow="Sprint 6 / Persistent QR Tag Printing"
+          eyebrow="Persistent QR Tag Printing"
           title={`${project.projectNo} · Printable Blind Tags`}
           description={`Using global template: ${settings.templateName}. Each QR tag opens live blind details and follows System Settings → Tags.`}
           actions={

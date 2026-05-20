@@ -1,7 +1,3 @@
-/*
-Design Philosophy: Industrial Command Center Minimalism.
-Sprint 2.1 separates Areas and Projects, adds project detail route, and keeps SBTS routes inside a persistent operational shell.
-*/
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ErrorBoundary from "./components/ErrorBoundary";

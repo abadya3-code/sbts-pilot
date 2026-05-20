@@ -25,8 +25,9 @@ const navItems = [
 
 type AppShellProps = { children: ReactNode };
 
-const APP_VERSION = "v10.4.8";
-const APP_YEAR = "2026";
+const APP_VERSION_SETTING_KEY = "general.appVersionNumber";
+
+
 
 function isActiveRoute(location: string, href: string) {
   if (href === "/dashboard") return location === "/" || location === "/dashboard";
@@ -76,6 +77,10 @@ export function AppShell({ children }: AppShellProps) {
   const departmentName = general?.departmentName ?? "Maintenance";
   const logoText = general?.logoText ?? "SBTS Professional";
   const logoUrl = (general as any)?.logoUrl ?? "";
+  const appVersion = (general as any)?.appVersionNumber ?? "V1.0";
+  const releaseName = (general as any)?.releaseName ?? "Pilot Live";
+  const releaseYear = (general as any)?.releaseYear ?? "2026";
+  const sessionModeLabel = session.loginMethod === "production-bound" ? "Live database" : "Demo session";
   const corporate = getCorporateIdentity(general as any);
   const identityLogo = corporate.companyLogo || logoUrl;
   const identityInitials = initialsFromCompanyName(corporate.companyShortName || systemName);
@@ -141,7 +146,7 @@ export function AppShell({ children }: AppShellProps) {
             <div className="command-sidebar-foot">
               <div className="command-version-block">
                 <div className="command-foot-label">Application version</div>
-                <div className="command-foot-value">SBTS {APP_VERSION} · {APP_YEAR}</div>
+                <div className="command-foot-value">SBTS {appVersion} · {releaseName} · {releaseYear}</div>
               </div>
               <button type="button" onClick={() => { clearAuthSession(); setLocation("/login"); }} className="command-foot-action danger"><LogOut className="h-4 w-4" /> Logout</button>
             </div>
@@ -156,7 +161,7 @@ export function AppShell({ children }: AppShellProps) {
               <div className="command-status-strip">
                 <button onClick={() => setLocation("/profile")} className="command-status-pill"><SlidersHorizontal className="h-4 w-4" /> {profile.fullName}</button>
                 <span className="command-status-pill">{profile.roleLabel}</span>
-                <span className="command-status-pill command-status-live"><span /> {session.loginMethod}</span>
+                <span className="command-status-pill command-status-live"><span /> {sessionModeLabel}</span>
                 <Link href="/inbox" className="command-status-icon" aria-label="Inbox"><Inbox className="h-4 w-4" /></Link>
                 <Link href="/inbox" className="command-status-icon command-status-alert" aria-label="Notifications"><Bell className="h-4 w-4" /></Link>
                 <button onClick={() => { clearAuthSession(); setLocation("/login"); }} className="command-status-icon" aria-label="Logout"><LogOut className="h-4 w-4" /></button>
@@ -218,7 +223,7 @@ export function AppShell({ children }: AppShellProps) {
                 })}
               </nav>
               <div className="classic-sidebar-bottom">
-                <div className="classic-version">SBTS {APP_VERSION} · {APP_YEAR}</div>
+                <div className="classic-version">SBTS {appVersion} · {releaseName} · {releaseYear}</div>
                 <div className="classic-date">{today}</div>
                 <button onClick={() => { clearAuthSession(); setLocation("/login"); }} className="classic-logout"><LogOut className="h-4 w-4" /> Logout</button>
               </div>
@@ -265,7 +270,7 @@ export function AppShell({ children }: AppShellProps) {
             <div className="sbts-sidebar-footer shrink-0 border-t border-white/10 p-4">
               <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                 <div className="text-[11px] font-black uppercase tracking-[0.2em] text-cyan-200">Application version</div>
-                <div className="mt-1 text-sm font-extrabold text-white">SBTS {APP_VERSION} · {APP_YEAR}</div>
+                <div className="mt-1 text-sm font-extrabold text-white">SBTS {appVersion} · {releaseName} · {releaseYear}</div>
               </div>
             </div>
           </div>
@@ -278,7 +283,7 @@ export function AppShell({ children }: AppShellProps) {
                 <div><div className="text-sm font-black text-slate-950 sm:text-base">{systemName}</div><div className="text-xs font-semibold text-slate-500">{corporate.showName ? corporate.companyName + " · " : ""}{facilityName} · {departmentName}</div></div>
               </div>
               <div className="flex items-center gap-2">
-                <button onClick={() => setLocation("/profile")} className="hidden items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold text-slate-600 shadow-sm sm:inline-flex"><SlidersHorizontal className="h-4 w-4" /> {profile.fullName} • {profile.roleLabel} • {session.loginMethod}</button>
+                <button onClick={() => setLocation("/profile")} className="hidden items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold text-slate-600 shadow-sm sm:inline-flex"><SlidersHorizontal className="h-4 w-4" /> {profile.fullName} • {profile.roleLabel}</button>
                 <Link href="/inbox" className="hidden h-11 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-600 shadow-sm sm:inline-flex"><Mail className="h-4 w-4" /> Inbox</Link><Link href="/inbox" className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm" aria-label="Notifications"><Bell className="h-5 w-5" /><span className="absolute right-2.5 top-2.5 h-2.5 w-2.5 rounded-full bg-cyan-500 ring-2 ring-white" /></Link>
                 <button onClick={() => { clearAuthSession(); setLocation("/login"); }} className="hidden h-11 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 text-xs font-extrabold text-slate-600 shadow-sm hover:border-rose-200 hover:text-rose-700 sm:inline-flex" aria-label="Logout"><LogOut className="h-4 w-4" /> Logout</button>
               </div>

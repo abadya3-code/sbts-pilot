@@ -51,7 +51,7 @@ export function AdminRouteGate({ children, title = "Admin hard lock" }: Props) {
         </div>
       </div>
       <div className="rounded-3xl border border-cyan-100 bg-cyan-50 p-5 text-sm leading-6 text-cyan-950">
-        Admin pages are hidden from non-admin navigation and protected again at route level. Sprint 10 login binds the current role to the authenticated session and admin-only procedures remain ready for server-side production guards.
+        Admin pages are hidden from non-admin navigation and protected again at route level. Login binds the current role to the authenticated session and admin-only procedures remain ready for server-side production guards.
       </div>
     </div>
   );

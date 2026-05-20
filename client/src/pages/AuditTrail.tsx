@@ -32,7 +32,7 @@ export default function AuditTrail() {
   ];
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow="Sprint 7 / Certificate & Tag traceability" title="Audit Trail" description="System trail for certificate issuance/printing, QR tag printing, workflow gates, approvals, and notification actions." />
+      <PageHeader eyebrow="Certificate & Tag Traceability" title="Audit Trail" description="System trail for certificate issuance/printing, QR tag printing, workflow gates, approvals, and notification actions." />
       <div className="grid gap-4 md:grid-cols-3">
         {kpis.map(item => { const Icon = item.icon; return <div key={item.label} className="sbts-card p-5"><div className={`mb-4 flex h-11 w-11 items-center justify-center rounded-2xl ${item.tone}`}><Icon className="h-5 w-5" /></div><div className="text-3xl font-black text-slate-950">{item.value}</div><div className="mt-1 text-xs font-black uppercase tracking-wider text-slate-400">{item.label}</div></div>; })}
       </div>
